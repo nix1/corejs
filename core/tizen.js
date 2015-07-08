@@ -19,6 +19,7 @@
 /**
  * Tizen module.
  * Module returns tizen global object.
+ * @requires {@link core/window}
  * @namespace core/tizen
  * @memberof core
   *
@@ -35,9 +36,12 @@
 
 define({
     name: 'core/tizen',
-    def: function coreTizen() {
+    requires: [
+        'core/window'
+    ],
+    def: function coreTizen(window) {
         'use strict';
 
-        return tizen;
+        return window.tizen;
     }
 });
