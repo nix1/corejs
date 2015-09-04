@@ -122,11 +122,11 @@
     function sort(modules) {
 
         var name = null,
-            // Modules to be sorted.
+        // Modules to be sorted.
             pending = [],
-            // Modules already sorted.
+        // Modules already sorted.
             sorted = [],
-            // Remember length of pending list for each module.
+        // Remember length of pending list for each module.
             visited = {},
             currModule = null;
 
@@ -204,21 +204,21 @@
 
         // Switch/case is used for performance reasons.
         switch (argsLen) {
-        case 0:
-            return new Def();
-        case 1:
-            return new Def(args[0]);
-        case 2:
-            return new Def(args[0], args[1]);
-        case 3:
-            return new Def(args[0], args[1], args[2]);
-        case 4:
-            return new Def(args[0], args[1], args[2], args[3]);
-        case 5:
-            return new Def(args[0], args[1], args[2], args[3], args[4]);
-        default:
-            // Too many parameters, use a short form instead
-            return Def.apply(Object.create(Def.prototype), args);
+            case 0:
+                return new Def();
+            case 1:
+                return new Def(args[0]);
+            case 2:
+                return new Def(args[0], args[1]);
+            case 3:
+                return new Def(args[0], args[1], args[2]);
+            case 4:
+                return new Def(args[0], args[1], args[2], args[3]);
+            case 5:
+                return new Def(args[0], args[1], args[2], args[3], args[4]);
+            default:
+                // Too many parameters, use a short form instead
+                return Def.apply(Object.create(Def.prototype), args);
         }
     }
 
@@ -260,23 +260,6 @@
     }
 
     /**
-     * Assigns nested attributes.
-     * @private
-     * @param {object} obj Object.
-     * @param {string[]} pathElements Elements array.
-     * @param {object} value Object.
-     */
-    function assignNested(obj, pathElements, value) {
-        var i, key = pathElements.pop();
-        // Check the path.
-        for (i = 0; i < pathElements.length; i += 1) {
-            // If empty create an empty object here.
-            obj = obj[pathElements[i]] = obj[pathElements[i]] || {};
-        }
-        obj[key] = value;
-    }
-
-    /**
      * Returns required module instance.
      * Parameters are passed to the constructor.
      * @private
@@ -294,6 +277,18 @@
             instance.evName = moduleName.replace(/\//g, '.');
         }
         return instance;
+    }
+
+    /**
+     * Creates a require function which takes
+     * modules from the req object in the closure.
+     * @param {object} req All requires as object.
+     * @return {function} Require function.
+     */
+    function createRequire(req) {
+        return function require(name) {
+            return req[name];
+        };
     }
 
     /**
@@ -318,11 +313,11 @@
 
                 // Full name keys for array-like indexing.
                 req[requires[i]] = instance;
-
-                // Nested objects for cleaner syntax.
-                assignNested(req, requires[i].split('/'), instance);
             }
-            params.push(req);
+
+            // The only param is a 'require' function used for retrieving
+            // instances of the required modules.
+            params.push(createRequire(req));
 
         } else if (def.length === requires.length) {
             // Collect requires as modules.
@@ -336,7 +331,7 @@
             // and different than requires params length.
             throw new Error(
                 'Invalid number of params in ' + def.name +
-                    '- expected ' + requires.length + ' but is ' + def.length
+                '- expected ' + requires.length + ' but is ' + def.length
             );
         }
 
@@ -403,7 +398,6 @@
                 }
             }
         }
-
         /* build:app */
         initDebug();
         /* endbuild:app */
@@ -535,66 +529,62 @@
      *
      * @example
      * // Define `foo` module:
-     * define({
-     *     name: 'foo',
+     * define(
+     *     'foo',
      *     def: function def() {}
-     * });
+     * );
      *
      * @example
      * // Define `bar` module:
-     * define({
-     *     name: 'bar',
-     *     def: function def() {}
-     * });
+     * define(
+     *     'bar',
+     *     function def() {}
+     * );
      *
      * @example
      * // Define `foo` module which require `bar` module:
-     * define({
-     *     name: 'foo',
-     *     requires: ['bar'],
-     *     def: function def(bar) {}
-     * });
+     * define(
+     *     'foo',
+     *     ['bar'],
+     *     function def(bar) {}
+     * );
      *
      * @example
      * // Define `foo` module which require `bar1` and `bar2` module:
-     * define({
-     *     name: 'foo',
-     *     requires: ['bar1', 'bar2'],
-     *     def: function def(bar1, bar2) {}
-     * });
+     * define(
+     *     'foo',
+     *     ['bar1', 'bar2'],
+     *     function def(bar1, bar2) {}
+     * );
      *
      * @example
      * // Define `foo` module which require `bar1` and `bar2` module:
-     * define({
-     *     name: 'foo',
-     *     requires: ['bar1', 'bar2'],
-     *     def: function def(require) {
-     *         var bar1 = require.bar1,
-     *             bar2 = require.bar2;
+     * define(
+     *     'foo',
+     *     ['bar1', 'bar2'],
+     *     function def(require) {
+     *         var bar1 = require('bar1'),
+     *             bar2 = require('bar2');
      *     }
-     * });
+     * );
      *
      * @example
      * // Define `foo` module which require `path/bar1` and `path/bar2` module:
-     * define({
-     *     name: 'foo',
-     *     requires: ['path/bar1', 'path/bar2'],
-     *     def: function def(require) {
-     *         // recommended
-     *         var bar1 = require.path.bar1,
-     *             bar2 = require.path.bar2;
-     *         // or
-     *         var bar1 = require['path/bar1'],
-     *             bar2 = require['path/bar2'];
+     * define(
+     *     'foo',
+     *     ['path/bar1', 'path/bar2'],
+     *     function def(require) {
+     *         var bar1 = require('path/bar1'),
+     *             bar2 = require('path/bar2');
      *     }
-     * });
+     * );
      *
      * @example
      * // Define `foo` module which is automatically initialized
      * // during definition:
-     * define({
-     *     name: 'foo',
-     *     def: function def() {
+     * define(
+     *     'foo',
+     *     function def() {
      *         // module definition
      *         function init() {
      *             // init action
@@ -605,37 +595,46 @@
      *             init: init
      *         };
      *     }
-     * });
+     * );
      *
      * @throws {Error} Module must have name and definititon.
      * @throws {Error} Module is already defined.
      *
-     * @param {object} module Module object.
-     * @param {string} module.name Module name.
-     * @param {string[]} [module.requires] Module requires.
-     * @param {function} module.def Module definititon.
+     * @param {string} name Module name.
+     * @param {string[]} [requires] Module requires.
+     * @param {function} def Module definititon.
      */
-    function define(module) {
+    function define(name, requires, def) {
         var i = 0,
-            j = 0;
+            j = 0,
+            module = null;
 
-        module = module || {};
+        // Handle optional requires.
+        if (typeof requires === 'function') {
+            def = requires;
+            requires = [];
+        }
 
-        if (module.name === undefined || module.def === undefined) {
+        module = {
+            name: name,
+            requires: requires || [],
+            def: def
+        };
+
+        if (name === undefined || def === undefined) {
             throw new Error(
                 'Module must have name and definition'
             );
         }
 
-        if (modules[module.name] !== undefined &&
-                modules[module.name].name !== undefined) {
+        if (modules[name] !== undefined &&
+            modules[name].name !== undefined) {
             throw new Error(
-                'Module "' + module.name + '" is already defined'
+                'Module "' + name + '" is already defined'
             );
         }
 
-        module.requires = module.requires || [];
-        modules[module.name] = module;
+        modules[name] = module;
 
         // Load required modules.
         for (i = 0, j = module.requires.length; i < j; i += 1) {
@@ -673,6 +672,8 @@
         }
         return true;
     }
+
+    define.amd = {};
 
     publicAPI = {
         require: require,

@@ -33,11 +33,11 @@
  * });
  */
 
-define({
-    name: 'core/window',
-    def: function coreWindow() {
+define(
+    'core/window',
+    function coreWindow() {
         'use strict';
 
         return window;
     }
-});
+);

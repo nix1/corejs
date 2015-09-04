@@ -23,12 +23,12 @@
  * @memberof core
  */
 
-define({
-    name: 'core/http',
-    requires: [
+define(
+    'core/http',
+    [
         'core/window'
     ],
-    def: function coreHttp(window) {
+    function coreHttp(window) {
         'use strict';
 
         /**
@@ -86,4 +86,4 @@ define({
             request: request
         };
     }
-});
+);

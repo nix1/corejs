@@ -25,13 +25,13 @@
  * @memberof core
  */
 
-define({
-    name: 'core/application',
-    requires: [
+define(
+    'core/application',
+    [
         'core/event',
         'core/tizen'
     ],
-    def: function coreApplication(e, tizen) {
+    function coreApplication(e, tizen) {
         'use strict';
 
         var app = null,
@@ -207,4 +207,4 @@ define({
         };
     }
 
-});
+);

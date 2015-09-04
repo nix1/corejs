@@ -28,15 +28,15 @@
  * @memberof core
  */
 
-define({
-    name: 'core/template',
-    requires: [
+define(
+    'core/template',
+    [
         'core/config',
         'core/event',
         'core/http',
         'core/window'
     ],
-    def: function template(config, e, http, window) {
+    function template(config, e, http, window) {
         'use strict';
 
         /**
@@ -384,4 +384,4 @@ define({
             get: get
         };
     }
-});
+);

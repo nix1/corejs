@@ -24,13 +24,13 @@
  * @memberof core
  */
 
-define({
-    name: 'core/power',
-    requires: [
+define(
+    'core/power',
+    [
         'core/event',
         'core/tizen'
     ],
-    def: function corePower(e, tizen) {
+    function corePower(e, tizen) {
         'use strict';
 
         var power = null,
@@ -142,4 +142,4 @@ define({
             getScreenState: getScreenState
         };
     }
-});
+);
