@@ -23,12 +23,12 @@
  * @memberof core
  */
 
-define({
-    name: 'core/audio',
-    requires: [
+define(
+    'core/audio',
+    [
         'core/window'
     ],
-    def: function coreAudio(window) {
+    function coreAudio(window) {
         'use strict';
 
         var MAX_VOLUME = 15,
@@ -143,4 +143,4 @@ define({
             loop: loop
         };
     }
-});
+);

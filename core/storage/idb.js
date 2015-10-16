@@ -24,19 +24,18 @@
  * @memberof core
  */
 
-define({
-    name: 'core/storage/idb',
-    requires: [
+define(
+    'core/storage/idb',
+    [
         'core/event',
         'core/window'
     ],
-    def: function coreStorage(req) {
+    function coreStorage(e, global) {
         'use strict';
 
-        var global = req.core.window,
-            indexedDB = global.webkitIndexedDB || global.indexedDB,
+        var indexedDB = global.webkitIndexedDB || global.indexedDB,
             IDBKeyRange = global.webkitIDBKeyRange || global.IDBKeyRange,
-            e = req.core.event,
+
             DB_NAME = 'corestorage',
             STORE_NAME = 'kvstore',
             VERSION = 5, // increment the value when db structure changes
@@ -317,4 +316,4 @@ define({
             remove: remove
         };
     }
-});
+);

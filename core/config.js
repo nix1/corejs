@@ -22,9 +22,9 @@
  * @memberof core
  */
 
-define({
-    name: 'core/config',
-    def: function config() {
+define(
+    'core/config',
+    function config() {
         'use strict';
 
         var properties = {
@@ -51,4 +51,4 @@ define({
         };
 
     }
-});
+);

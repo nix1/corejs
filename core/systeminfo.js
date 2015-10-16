@@ -24,13 +24,13 @@
  * @memberof core
  */
 
-define({
-    name: 'core/systeminfo',
-    requires: [
+define(
+    'core/systeminfo',
+    [
         'core/event',
         'core/tizen'
     ],
-    def: function coreSystemInfo(e, tizen) {
+    function coreSystemInfo(e, tizen) {
         'use strict';
 
         var systeminfo = null,
@@ -117,4 +117,4 @@ define({
             init: init
         };
     }
-});
+);

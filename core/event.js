@@ -24,12 +24,12 @@
  * @memberof core
  */
 
-define({
-    name: 'core/event',
-    requires: [
+define(
+    'core/event',
+    [
         'core/window'
     ],
-    def: function event(window) {
+    function event(window) {
         'use strict';
 
         var listeners = {};
@@ -317,4 +317,4 @@ define({
             getListeners: getListeners
         };
     }
-});
+);

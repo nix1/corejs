@@ -34,14 +34,14 @@
  * });
  */
 
-define({
-    name: 'core/tizen',
-    requires: [
+define(
+    'core/tizen',
+    [
         'core/window'
     ],
-    def: function coreTizen(window) {
+    function coreTizen(window) {
         'use strict';
 
         return window.tizen;
     }
-});
+);
